@@ -5,6 +5,8 @@
  */
 package py.com.backend.parcial1.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,8 +44,9 @@ public class Cliente {
     private String email;
     @Column(name = "telefono", length = 100)
     private String telefono;
-    @Temporal(TemporalType.DATE)
     @Column(name = "fecha_nacimiento", length = 100)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "America/Asuncion")
+    @Temporal(TemporalType.DATE)
     private Date fechaNacimiento;
 
     public Integer getId() {
@@ -120,6 +123,15 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "Cliente{" + "id=" + id + ", nombre=" + nombre + ", apellido=" + apellido + ", nroDocumento=" + nroDocumento + ", tipoDocumento=" + tipoDocumento + ", nacionalidad=" + nacionalidad + ", email=" + email + ", tel\u00e9fono=" + telefono + ", fechaNacimiento=" + fechaNacimiento + '}';
+        return "Cliente{" + "id=" + id 
+                + ", nombre=" + nombre 
+                + ", apellido=" + apellido 
+                + ", nroDocumento=" + nroDocumento 
+                + ", tipoDocumento=" + tipoDocumento 
+                + ", nacionalidad=" + nacionalidad 
+                + ", email=" + email 
+                + ", telefono=" + telefono 
+                + ", fechaNacimiento=" + (fechaNacimiento == null ? null : new SimpleDateFormat("yyyy-MM-dd").format(fechaNacimiento))
+                + '}';
     }
 }

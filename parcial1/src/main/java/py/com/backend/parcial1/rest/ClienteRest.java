@@ -43,7 +43,8 @@ public class ClienteRest {
     @PUT
     @Path("/")
     public Response actualizar(Cliente cliente) {
-        clienteDao.insertar(cliente);
+        System.out.println("cliente: " + cliente);
+        //clienteDao.update(cliente);
         return Response.ok().build();
     }
 }
