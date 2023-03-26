@@ -1,8 +1,8 @@
 # backend-parcial1
 
-##Querys a ejecutar
+## Querys a ejecutar
+```
 create database parcial1;
-
 create table parcial1.public.cliente(
 	id serial primary key,
 	nombre varchar(100) null,
@@ -14,3 +14,4 @@ create table parcial1.public.cliente(
 	telefono varchar(100) null, 
 	fecha_nacimiento date null
 );
+```
