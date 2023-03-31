@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import py.com.backend.parcial1.dto.Respuesta;
 import py.com.backend.parcial1.model.ConceptosUsoPuntos;
 
 /**
@@ -22,56 +23,61 @@ public class ConceptosUsoPuntosDAO {
     @PersistenceContext(unitName = "parcial1PU")
     private EntityManager em;
 
-    public void insertar(ConceptosUsoPuntos conceptosusopuntos) {
-        this.em.persist(conceptosusopuntos);
+    public Respuesta insertar(ConceptosUsoPuntos conceptosusopuntos) {
+        try {
+            this.em.persist(conceptosusopuntos);
+            return new Respuesta(Boolean.TRUE, 200, conceptosusopuntos);
+        } catch (Exception e) {
+            return new Respuesta(Boolean.FALSE, 500, e.getMessage());
+        }
     }
 
-    public List<ConceptosUsoPuntos> findAll() {
+    public Respuesta findAll() {
         try {
             Query q = this.em.createNamedQuery("ConceptosUsoPuntos.findAll", ConceptosUsoPuntos.class);
-            return q.getResultList();
+            return new Respuesta(Boolean.TRUE, 200, (List<ConceptosUsoPuntos>) q.getResultList());
         } catch (Exception e) {
             System.out.println("ConceptosUsoPuntosDAO.findAll: " + e.getMessage());
+            return new Respuesta(Boolean.FALSE, 500, e.getMessage());
         }
-        return null;
     }
 
-    public ConceptosUsoPuntos findById(Integer id) {
+    public Respuesta findById(Integer id) {
         try {
             Query q = this.em.createNamedQuery("ConceptosUsoPuntos.findById", ConceptosUsoPuntos.class);
             q.setParameter("id", id);
-            return (ConceptosUsoPuntos)q.getSingleResult();
+            return new Respuesta(Boolean.TRUE, 200, (ConceptosUsoPuntos) q.getSingleResult());
         } catch (Exception e) {
             System.out.println("ConceptosUsoPuntosDAO.findById: " + e.getMessage());
+            return new Respuesta(Boolean.FALSE, 500, e.getMessage());
         }
-        return null;
     }
     
-    public boolean update(ConceptosUsoPuntos conceptosusopuntos) {
+    public Respuesta update(ConceptosUsoPuntos conceptosusopuntos) {
         try {
-            ConceptosUsoPuntos c = findById(conceptosusopuntos.getId());
-            if (c == null) {
-                return false;
+            Respuesta respCup= findById(conceptosusopuntos.getId());
+            if (!respCup.getExito()) {
+                return new Respuesta(Boolean.FALSE, 500, "ConceptosUsoPuntos no existe");
             }
             this.em.merge(conceptosusopuntos);
-            return true;
+            return new Respuesta(Boolean.TRUE, 200, "ConceptosUsoPuntos Actualizado");
         } catch (Exception e) {
             System.out.println("Excepcion en update conceptosusopuntos:\n" + e.getMessage());
-            return false;
+            return new Respuesta(Boolean.FALSE, 500, e.getMessage());
         }
     }
     
-    public boolean delete(Integer conceptosusopuntosId) {
+    public Respuesta delete(Integer conceptosusopuntosId) {
         try {
-            ConceptosUsoPuntos c = (ConceptosUsoPuntos) findById(conceptosusopuntosId);
-            if (c == null) {
-                return false;
+            Respuesta respConceptosUsoPuntos = findById(conceptosusopuntosId);
+            if (!respConceptosUsoPuntos.getExito()) {
+                return new Respuesta(Boolean.FALSE, 500, "ConceptosUsoPuntos no existe");
             }
-            this.em.remove(c);
-            return true;
+            this.em.remove((ConceptosUsoPuntos) respConceptosUsoPuntos.getMensaje());
+            return new Respuesta(Boolean.TRUE, 200, "ConceptosUsoPuntos Eliminado");
         } catch (Exception e) {
             System.out.println("Excepcion en delete conceptosusopuntos:\n" + e.getMessage());
-            return false;
+            return new Respuesta(Boolean.FALSE, 500, e.getMessage());
         }
     }
 }

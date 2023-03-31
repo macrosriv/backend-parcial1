@@ -15,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import py.com.backend.parcial1.dto.Respuesta;
 import py.com.backend.parcial1.ejb.ConceptosUsoPuntosDAO;
 import py.com.backend.parcial1.model.ConceptosUsoPuntos;
 
@@ -54,13 +55,15 @@ public class ConceptosUsoPuntosRest {
     @Path("/")
     public Response actualizar(ConceptosUsoPuntos cup) {
         System.out.println("conceptosusopuntos: " + cup);
-        return conceptosusopuntosDao.update(cup) ? Response.ok().build() : Response.notModified().build();
+        Respuesta resp = conceptosusopuntosDao.update(cup);
+        return  Response.status(resp.getCodigo()).entity(resp).build();
     }
     
     @DELETE
     @Path("/")
     public Response delete(@QueryParam(value = "id") Integer id) {
         System.out.println("conceptosusopuntos: " + id);
-        return conceptosusopuntosDao.delete(id) ? Response.ok().build() : Response.notModified().build();
+        Respuesta resp = conceptosusopuntosDao.delete(id);
+        return  Response.status(resp.getCodigo()).entity(resp).build();
     }
 }

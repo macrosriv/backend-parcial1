@@ -15,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import py.com.backend.parcial1.dto.Respuesta;
 import py.com.backend.parcial1.ejb.ClienteDAO;
 import py.com.backend.parcial1.model.Cliente;
 
@@ -33,28 +34,32 @@ public class ClienteRest {
     @GET
     @Path("/")
     public Response findAll() {
-        return Response.ok(clienteDao.findAll()).build();
+        Respuesta resp = clienteDao.findAll();
+        return  Response.status(resp.getCodigo()).entity(resp).build();
     }
 
     @GET
     @Path("/")
     public Response findById(@QueryParam(value = "id") Integer id) {
         System.out.println("id: " + id);
-        return Response.ok(clienteDao.findById(id)).build();
+        Respuesta resp = clienteDao.findById(id);
+        return  Response.status(resp.getCodigo()).entity(resp).build();
     }
 
     @GET
     @Path("/")
     public Response findByNombre(@QueryParam(value = "nombre") String nombre) {
         System.out.println("nombre: " + nombre);
-        return Response.ok(clienteDao.findByNombre(nombre)).build();
+        Respuesta resp = clienteDao.findByNombre(nombre);
+        return  Response.status(resp.getCodigo()).entity(resp).build();
     }
 
     @GET
     @Path("/")
     public Response findByApellido(@QueryParam(value = "apellido") String apellido) {
         System.out.println("apellido: " + apellido);
-        return Response.ok(clienteDao.findByApellido(apellido)).build();
+        Respuesta resp = clienteDao.findByApellido(apellido);
+        return  Response.status(resp.getCodigo()).entity(resp).build();
     }
 
     @GET
@@ -62,27 +67,30 @@ public class ClienteRest {
     public Response findByFechaNacimiento(@QueryParam(value = "fechaNacDesde") String fechaNacDesde, @QueryParam(value = "fechaNacHasta") String fechaNacHasta) {
         System.out.println("fechaNacDesde: " + fechaNacDesde);
         System.out.println("fechaNacHasta: " + fechaNacHasta);
-        return Response.ok(clienteDao.findByFechaNacimiento(fechaNacDesde, fechaNacHasta)).build();
+        Respuesta resp = clienteDao.findByFechaNacimiento(fechaNacDesde, fechaNacHasta);
+        return  Response.status(resp.getCodigo()).entity(resp).build();
     }
 
     @POST
     @Path("/")
     public Response crear(Cliente cliente) {
-        clienteDao.insertar(cliente);
-        return Response.ok().build();
+        Respuesta resp = clienteDao.insertar(cliente);
+        return  Response.status(resp.getCodigo()).entity(resp).build();
     }
     
     @PUT
     @Path("/")
     public Response actualizar(Cliente cliente) {
         System.out.println("cliente: " + cliente);
-        return clienteDao.update(cliente) ? Response.ok().build() : Response.notModified().build();
+        Respuesta resp = clienteDao.update(cliente);
+        return  Response.status(resp.getCodigo()).entity(resp).build();
     }
     
     @DELETE
     @Path("/")
     public Response delete(@QueryParam(value = "id") Integer id) {
         System.out.println("cliente: " + id);
-        return clienteDao.delete(id) ? Response.ok().build() : Response.notModified().build();
+        Respuesta resp = clienteDao.delete(id);
+        return  Response.status(resp.getCodigo()).entity(resp).build();
     }
 }
